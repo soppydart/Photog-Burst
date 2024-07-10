@@ -2,41 +2,23 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 	"path/filepath"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/soppydart/Photog-Burst/controllers"
+	"github.com/soppydart/Photog-Burst/views"
 )
-
-func executeTemplate(w http.ResponseWriter, filepath string) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	tpl, err := template.ParseFiles(filepath)
-	if err != nil {
-		http.Error(w, "There was an error parsing the template", http.StatusInternalServerError)
-		return
-	}
-	err = tpl.Execute(w, nil)
-	if err != nil {
-		http.Error(w, "There was an error executing the template", http.StatusInternalServerError)
-		return
-	}
-}
-
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	tplPath := filepath.Join("templates", "home.gohtml")
-	executeTemplate(w, tplPath)
-}
-
-func contactHandler(w http.ResponseWriter, r *http.Request) {
-	tplPath := filepath.Join("templates", "contact.gohtml")
-	executeTemplate(w, tplPath)
-}
 
 func main() {
 	r := chi.NewRouter()
-	r.Get("/", homeHandler)
-	r.Get("/contact", contactHandler)
+
+	r.Get("/", controllers.StaticHandler(
+		views.Must(views.Parse(filepath.Join("templates", "home.gohtml")))))
+
+	r.Get("/contact", controllers.StaticHandler(
+		views.Must(views.Parse(filepath.Join("templates", "contact.gohtml")))))
+
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page Not Found!", http.StatusNotFound)
 	})
