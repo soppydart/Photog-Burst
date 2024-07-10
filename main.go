@@ -14,10 +14,19 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Get("/", controllers.StaticHandler(
-		views.Must(views.ParseFS(templates.FS, "home.gohtml"))))
+		views.Must(views.ParseFS(
+			templates.FS, "home.gohtml", "layout.gohtml"))))
 
 	r.Get("/contact", controllers.StaticHandler(
-		views.Must(views.ParseFS(templates.FS, "contact.gohtml"))))
+		views.Must(views.ParseFS(
+			templates.FS, "contact.gohtml", "layout.gohtml"))))
+
+	usersC := controllers.Users{}
+	usersC.Templates.New = views.Must(views.ParseFS(
+		templates.FS, "signup.gohtml", "layout.gohtml"))
+	r.Get("/signup", usersC.New)
+
+	r.Post("/users", usersC.Create)
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page Not Found!", http.StatusNotFound)
