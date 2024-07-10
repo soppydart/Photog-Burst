@@ -1,0 +1,57 @@
+{{define "header"}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body,
+      header,
+      nav,
+      a,
+      div {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <header class="bg-gradient-to-r from-blue-800 to-indigo-600 text-white/80">
+      <nav class="px-8 py-6 flex items-baseline">
+        <div class="text-4xl pr-8 font-serif tracking-tighter">
+          Photog Burst
+        </div>
+        <div class="flex-grow">
+          <a class="text-lg font-semibold hover:text-black/50 pr-8" href="/"
+            >Home</a
+          >
+          <a
+            class="text-lg font-semibold hover:text-black/50 pr-8"
+            href="/contact"
+            >Contact</a
+          >
+        </div>
+        <div>
+          <a class="pr-4" href="#">Sign in</a>
+          <a
+            class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded"
+            href="/signup"
+            >Sign up</a
+          >
+        </div>
+      </nav>
+    </header>
+    {{ end }}
+
+    {{/* Each page's content goes here */}}
+
+    {{define "footer"}}
+  </body>
+</html>
+{{ end }}
