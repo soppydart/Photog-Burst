@@ -4,6 +4,9 @@
     Start sharing your photos today!
   </h1>
   <form action="/users" method="post" class="px-8 py-8 bg-white rounded shadow">
+    <div class="hidden">
+      {{csrfField}}
+    </div>
     <div class="py-2">
       <label for="email" class="text-sm font-semibold">Email Address</label>
       <input
