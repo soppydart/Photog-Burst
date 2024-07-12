@@ -37,7 +37,12 @@ func main() {
 	}
 	usersC.Templates.New = views.Must(views.ParseFS(
 		templates.FS, "signup.gohtml", "layout.gohtml"))
+	usersC.Templates.SignIn = views.Must(views.ParseFS(
+		templates.FS, "signin.gohtml", "layout.gohtml"))
+
 	r.Get("/signup", usersC.New)
+	
+	r.Get("/signin", usersC.SignIn)
 
 	r.Post("/users", usersC.Create)
 
