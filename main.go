@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/csrf"
 	"github.com/soppydart/Photog-Burst/controllers"
 	"github.com/soppydart/Photog-Burst/models"
 	"github.com/soppydart/Photog-Burst/templates"
@@ -54,8 +55,11 @@ func main() {
 		http.Error(w, "Page Not Found!", http.StatusNotFound)
 	})
 
+	csrfKey := "sw60rn5lakz0ohd5qaz87l39z1lj913a"
+	csrfMw := csrf.Protect([]byte(csrfKey), csrf.Secure(false))
+
 	fmt.Println("Starting the server on port 3000...")
-	err = http.ListenAndServe(":3000", r)
+	err = http.ListenAndServe(":3000", csrfMw(r))
 	if err != nil {
 		panic(err)
 	}
