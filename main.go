@@ -41,8 +41,10 @@ func main() {
 		templates.FS, "signin.gohtml", "layout.gohtml"))
 
 	r.Get("/signup", usersC.New)
-	
+
 	r.Get("/signin", usersC.SignIn)
+
+	r.Post("/signin", usersC.ProcessSignIn)
 
 	r.Post("/users", usersC.Create)
 
