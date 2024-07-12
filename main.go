@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/soppydart/Photog-Burst/controllers"
+	"github.com/soppydart/Photog-Burst/models"
 	"github.com/soppydart/Photog-Burst/templates"
 	"github.com/soppydart/Photog-Burst/views"
 )
@@ -21,7 +22,19 @@ func main() {
 		views.Must(views.ParseFS(
 			templates.FS, "contact.gohtml", "layout.gohtml"))))
 
-	usersC := controllers.Users{}
+	cfg := models.DefaultPostgresConfig()
+	db, err := models.Open(cfg)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	userService := models.UserService{
+		DB: db,
+	}
+
+	usersC := controllers.Users{
+		UserService: &userService,
+	}
 	usersC.Templates.New = views.Must(views.ParseFS(
 		templates.FS, "signup.gohtml", "layout.gohtml"))
 	r.Get("/signup", usersC.New)
@@ -33,7 +46,7 @@ func main() {
 	})
 
 	fmt.Println("Starting the server on port 3000...")
-	err := http.ListenAndServe(":3000", r)
+	err = http.ListenAndServe(":3000", r)
 	if err != nil {
 		panic(err)
 	}
