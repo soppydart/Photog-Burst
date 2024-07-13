@@ -29,12 +29,17 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+
 	userService := models.UserService{
+		DB: db,
+	}
+	sessionService := models.SessionService{
 		DB: db,
 	}
 
 	usersC := controllers.Users{
-		UserService: &userService,
+		UserService:    &userService,
+		SessionService: &sessionService,
 	}
 	usersC.Templates.New = views.Must(views.ParseFS(
 		templates.FS, "signup.gohtml", "layout.gohtml"))
@@ -50,6 +55,8 @@ func main() {
 	r.Post("/users", usersC.Create)
 
 	r.Get("/users/me", usersC.CurrentUser)
+
+	r.Post("/signout", usersC.ProcessSignOut)
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page Not Found!", http.StatusNotFound)
