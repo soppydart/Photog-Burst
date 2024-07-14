@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/csrf"
 	"github.com/soppydart/Photog-Burst/controllers"
+	"github.com/soppydart/Photog-Burst/migrations"
 	"github.com/soppydart/Photog-Burst/models"
 	"github.com/soppydart/Photog-Burst/templates"
 	"github.com/soppydart/Photog-Burst/views"
@@ -29,6 +30,8 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+
+	err = models.MigrateFS(db, migrations.FS,".")
 
 	userService := models.UserService{
 		DB: db,
