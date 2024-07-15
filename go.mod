@@ -4,8 +4,10 @@ go 1.22.4
 
 require (
 	github.com/go-chi/chi/v5 v5.1.0
+	github.com/go-mail/mail/v2 v2.3.0
 	github.com/gorilla/csrf v1.7.2
 	github.com/jackc/pgx/v5 v5.6.0
+	github.com/joho/godotenv v1.5.1
 	github.com/pressly/goose/v3 v3.21.1
 	golang.org/x/crypto v0.25.0
 )
@@ -20,4 +22,6 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
+	gopkg.in/mail.v2 v2.3.1 // indirect
 )
