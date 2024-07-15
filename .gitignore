@@ -21,8 +21,9 @@
 go.work
 go.work.sum
 
-# tmp dir
+# air
 tmp/
-
-# air config
 .air.toml
+
+# Env variables
+.env
