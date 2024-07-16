@@ -2,6 +2,7 @@ package views
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"html/template"
 	"io"
@@ -13,6 +14,10 @@ import (
 	"github.com/soppydart/Photog-Burst/context"
 	"github.com/soppydart/Photog-Burst/models"
 )
+
+type public interface {
+	Public() string
+}
 
 type Template struct {
 	htmlTpl *template.Template
@@ -28,6 +33,9 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 			"currentUser": func() (template.HTML, error) {
 				return "", fmt.Errorf("currentUser not implemented")
 			},
+			"errors": func() []string {
+				return nil
+			},
 		},
 	)
 	tpl, err := tpl.ParseFS(fs, patterns...)
@@ -39,16 +47,6 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 	}, nil
 }
 
-// func Parse(filepath string) (Template, error) {
-// 	tpl, err := template.ParseFiles(filepath)
-// 	if err != nil {
-// 		return Template{}, fmt.Errorf("parsing template: %w", err)
-// 	}
-// 	return Template{
-// 		htmlTpl: tpl,
-// 	}, nil
-// }
-
 func Must(t Template, err error) Template {
 	if err != nil {
 		panic(err)
@@ -56,7 +54,8 @@ func Must(t Template, err error) Template {
 	return t
 }
 
-func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface{}) {
+func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface{},
+	errs ...error) {
 	tpl, err := t.htmlTpl.Clone()
 	if err != nil {
 		log.Printf("cloning template: %v", err)
@@ -72,6 +71,9 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 			"currentUser": func() *models.User {
 				return context.User(r.Context())
 			},
+			"errors": func() []string {
+				return errMessages(errs...)
+			},
 		},
 	)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -83,4 +85,18 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 		return
 	}
 	io.Copy(w, &buf)
+}
+
+func errMessages(errs ...error) []string {
+	var msgs []string
+	for _, err := range errs {
+		var pubErr public
+		if errors.As(err, &pubErr) {
+			msgs = append(msgs, pubErr.Public())
+		} else {
+			fmt.Println(err)
+			msgs = append(msgs, err.Error())
+		}
+	}
+	return msgs
 }
