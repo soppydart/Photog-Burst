@@ -93,7 +93,9 @@ func main() {
 	}
 
 	csrfMw := csrf.Protect([]byte(cfg.CSRF.Key),
-		csrf.Secure(cfg.CSRF.Secure))
+		csrf.Secure(cfg.CSRF.Secure),
+		csrf.Path("/"),
+	)
 
 	//Set up controllers
 	usersC := controllers.Users{
@@ -118,6 +120,12 @@ func main() {
 	}
 	galleriesC.Templates.New = views.Must(views.ParseFS(
 		templates.FS, "galleries/new.gohtml", "layout.gohtml"))
+	galleriesC.Templates.Edit = views.Must(views.ParseFS(
+		templates.FS, "galleries/edit.gohtml", "layout.gohtml"))
+	galleriesC.Templates.Index = views.Must(views.ParseFS(
+		templates.FS, "galleries/index.gohtml", "layout.gohtml"))
+	galleriesC.Templates.Show = views.Must(views.ParseFS(
+		templates.FS, "galleries/show.gohtml", "layout.gohtml"))
 
 	// Set up routes
 	r := chi.NewRouter()
@@ -142,7 +150,18 @@ func main() {
 		r.Use(umw.RequireUser)
 		r.Get("/", usersC.CurrentUser)
 	})
-	r.Get("/galleries/new", galleriesC.New)
+	r.Route("/galleries", func(r chi.Router) {
+		r.Get("/{id}", galleriesC.Show)
+		r.Group(func(r chi.Router) {
+			r.Use(umw.RequireUser)
+			r.Get("/", galleriesC.Index)
+			r.Get("/new", galleriesC.New)
+			r.Post("/", galleriesC.Create)
+			r.Get("/{id}/edit", galleriesC.Edit)
+			r.Post("/{id}", galleriesC.Update)
+			r.Post("/{id}/delete", galleriesC.Delete)
+		})
+	})
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page Not Found!", http.StatusNotFound)
 	})
