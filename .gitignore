@@ -27,3 +27,6 @@ tmp/
 
 # Env variables
 .env
+
+# Test Images
+images/
