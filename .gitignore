@@ -30,3 +30,8 @@ tmp/
 
 # Test Images
 images/
+
+# Tailwind builder
+node_modules/
+*.json
+assets/
