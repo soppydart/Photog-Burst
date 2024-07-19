@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - ./images:/app/images
+      - ~/data/photogburst.studio/images:/app/images
     depends_on:
       - db
 
@@ -20,3 +20,12 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./images:/app/images
+
+  db:
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: ${PSQL_USER}
+      POSTGRES_PASSWORD: ${PSQL_PASSWORD}
+      POSTGRES_DB: ${PSQL_DATABASE}
+    volumes:
+      - ~/data/photogburst.studio/psql:/var/lib/postgresql/data/pgdata
