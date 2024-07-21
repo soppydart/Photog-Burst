@@ -11,6 +11,7 @@ import (
 	"github.com/soppydart/Photog-Burst/context"
 	"github.com/soppydart/Photog-Burst/errors"
 	"github.com/soppydart/Photog-Burst/models"
+	"golang.org/x/sync/errgroup"
 )
 
 type Galleries struct {
@@ -285,6 +286,34 @@ func (g Galleries) UploadImage(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Something went wrong...", http.StatusInternalServerError)
 			return
 		}
+	}
+	editPath := fmt.Sprintf("/galleries/%d/edit", gallery.ID)
+	http.Redirect(w, r, editPath, http.StatusFound)
+}
+
+func (g Galleries) ImageViaURL(w http.ResponseWriter, r *http.Request) {
+	gallery, err := g.GalleryByID(w, r, UserMustOwnGallery)
+	if err != nil {
+		return
+	}
+	err = r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Invalid request...", http.StatusBadRequest)
+		return
+	}
+	files := r.PostForm["files"]
+	var eg errgroup.Group
+	for _, file := range files {
+		imageFile := file
+		eg.Go(func() error {
+			return g.GalleryService.CreateImageViaURL(gallery.ID, imageFile)
+		})
+	}
+	err = eg.Wait()
+	if err != nil {
+		http.Error(w, "Unable to download all images...", http.StatusInternalServerError)
+		return
 	}
 	editPath := fmt.Sprintf("/galleries/%d/edit", gallery.ID)
 	http.Redirect(w, r, editPath, http.StatusFound)
