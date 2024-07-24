@@ -35,3 +35,9 @@ images/
 node_modules/
 *.json
 assets/
+
+# Terraform files
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
