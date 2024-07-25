@@ -16,6 +16,10 @@ pipeline {
                     }
                     echo 'Successfully logged into Docker Hub'
 
+                    withCredentials([file(credentialsId: 'photog-burst-env', variable: 'ENV_FILE')]) {
+                        sh 'cp $ENV_FILE .env'
+                    }
+
                     echo 'Building docker image'
                     sh "docker build -t ${env.IMAGE_NAME} ."
                     sh "docker push ${env.IMAGE_NAME}"
@@ -49,10 +53,6 @@ pipeline {
                 script {
                     def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
                     def shellCmd = "bash /home/ec2-user/server-cmds.sh ${env.IMAGE_NAME}"
-
-                    withCredentials([file(credentialsId: 'photog-burst-env', variable: 'ENV_FILE')]) {
-                        sh 'cat $ENV_FILE > .env'
-                    }
 
                     sshagent(['jenkins-ec2-key-pair']) {
                         sh "scp -o StrictHostKeyChecking=no docker-compose.production.yaml ${ec2Instance}:/home/ec2-user"
