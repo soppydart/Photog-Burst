@@ -48,18 +48,35 @@ resource "aws_route_table_association" "pb_route_table_association" {
 resource "aws_security_group" "pb_sg" {
   name   = "${var.env_prefix}-sg"
   vpc_id = aws_vpc.pb_vpc.id
+
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["${var.my_ip}/32", "${var.jenkins_ip}/32"]
   }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   egress {
     from_port       = 0
     to_port         = 0
@@ -67,10 +84,12 @@ resource "aws_security_group" "pb_sg" {
     cidr_blocks     = ["0.0.0.0/0"]
     prefix_list_ids = []
   }
+
   tags = {
     Name = "${var.env_prefix}-sg"
   }
 }
+
 
 data "aws_ami" "latest_amazon_linux_image" {
   most_recent = true

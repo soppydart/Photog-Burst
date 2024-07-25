@@ -16,6 +16,10 @@ pipeline {
                     }
                     echo 'Successfully logged into Docker Hub'
 
+                    withCredentials([file(credentialsId: 'photog-burst-env', variable: 'ENV_FILE')]) {
+                        sh 'cp $ENV_FILE .env'
+                    }
+
                     echo 'Building docker image'
                     sh "docker build -t ${env.IMAGE_NAME} ."
                     sh "docker push ${env.IMAGE_NAME}"
@@ -25,11 +29,12 @@ pipeline {
         }
         stage('Provision Server') {
             environment {
-                AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
-                AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+                AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_key')
             }
             steps {
                 script {
+                    echo 'Provisioning EC2 server'
                     dir('terraform') {
                         sh 'terraform init'
                         sh 'terraform apply -auto-approve'
@@ -50,14 +55,11 @@ pipeline {
                     def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
                     def shellCmd = "bash /home/ec2-user/server-cmds.sh ${env.IMAGE_NAME}"
 
-                    withCredentials([file(credentialsId: 'photog-burst-env', variable: 'ENV_FILE')]) {
-                        sh 'cat $ENV_FILE > .env'
-                    }
-
                     sshagent(['jenkins-ec2-key-pair']) {
                         sh "scp -o StrictHostKeyChecking=no docker-compose.production.yaml ${ec2Instance}:/home/ec2-user"
                         sh "scp -o StrictHostKeyChecking=no server-cmds.sh ${ec2Instance}:/home/ec2-user"
                         sh "scp -o StrictHostKeyChecking=no .env ${ec2Instance}:/home/ec2-user"
+                        sh "scp -o StrictHostKeyChecking=no Caddyfile ${ec2Instance}:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"
                     }
                 }

@@ -26,6 +26,7 @@ services:
       - "${SERVER_PORT}:${CONTAINER_PORT}"
     volumes:
       - ~/data/photogburst.studio/images:/app/images
+      - ./.env:/app/.env
     depends_on:
       - db
 
