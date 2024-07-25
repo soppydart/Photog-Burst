@@ -59,6 +59,7 @@ pipeline {
                         sh "scp -o StrictHostKeyChecking=no docker-compose.production.yaml ${ec2Instance}:/home/ec2-user"
                         sh "scp -o StrictHostKeyChecking=no server-cmds.sh ${ec2Instance}:/home/ec2-user"
                         sh "scp -o StrictHostKeyChecking=no .env ${ec2Instance}:/home/ec2-user"
+                        sh "scp -o StrictHostKeyChecking=no Caddyfile ${ec2Instance}:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"
                     }
                 }
