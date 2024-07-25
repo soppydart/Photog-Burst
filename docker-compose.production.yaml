@@ -1,11 +1,29 @@
-version: "3.9"
-
 services:
   server:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: soppydart/photog-burst:latest
     restart: always
+    environment:
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+
+      PSQL_HOST: ${PSQL_HOST}
+      PSQL_PORT: ${PSQL_PORT}
+      PSQL_USER: ${PSQL_USER}
+      PSQL_PASSWORD: ${PSQL_PASSWORD}
+      PSQL_DATABASE: ${PSQL_DATABASE}
+      PSQL_SSLMODE: ${PSQL_SSLMODE}
+
+      CSRF_KEY: ${CSRF_KEY}
+      CSRF_SECURE: ${CSRF_SECURE}
+
+      SERVER_ADDRESS: ${SERVER_ADDRESS}
+
+      DROPBOX_APP_ID: ${DROPBOX_APP_ID}
+      DROPBOX_APP_SECRET: ${DROPBOX_APP_SECRET}
+    ports:
+      - "${SERVER_PORT}:${CONTAINER_PORT}"
     volumes:
       - ~/data/photogburst.studio/images:/app/images
     depends_on:
@@ -22,6 +40,8 @@ services:
       - ./images:/app/images
 
   db:
+    image: postgres
+    restart: always
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_USER: ${PSQL_USER}
