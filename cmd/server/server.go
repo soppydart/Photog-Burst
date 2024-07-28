@@ -168,9 +168,9 @@ func run(cfg config) error {
 	r.Get("/", controllers.StaticHandler(
 		views.Must(views.ParseFS(
 			templates.FS, "home.gohtml", "layout.gohtml"))))
-	r.Get("/contact", controllers.StaticHandler(
+	r.Get("/about", controllers.StaticHandler(
 		views.Must(views.ParseFS(
-			templates.FS, "contact.gohtml", "layout.gohtml"))))
+			templates.FS, "about.gohtml", "layout.gohtml"))))
 	r.Get("/signup", usersC.New)
 	r.Get("/signin", usersC.SignIn)
 	r.Post("/signin", usersC.ProcessSignIn)
