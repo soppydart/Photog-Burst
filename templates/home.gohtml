@@ -1,3 +1,38 @@
 {{template "header" .}}
-<h1>Hiii. Welcome to my awesome site!!!</h1>
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 to-teal-500 text-white">
+  <div class="text-center">
+    <h1 class="text-5xl font-extrabold mb-6">
+      <span>
+        Welcome to
+      </span>
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 animate-gradient-fast">
+        Photog Burst!
+      </span>
+    </h1>
+    <p class="text-lg mb-8 transition duration-300 hover:text-teal-700">
+      A place to share and explore amazing photos.
+    </p>
+    <a href="/signup" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 rounded-full text-lg font-semibold transition transform hover:scale-105">
+      Get Started
+    </a>
+  </div>
+</section>
 {{template "footer" .}}
+
+<style>
+  @keyframes gradient-fast {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  .animate-gradient-fast {
+    background-size: 200% 200%;
+    animation: gradient-fast 1.5s ease infinite;
+  }
+</style>

@@ -10,7 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
       rel="stylesheet"
     />
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" />
+
     <link rel="stylesheet" href="/assets/styles.css" />
     <style>
       body,
@@ -22,54 +23,46 @@
       }
     </style>
   </head>
-  <body class="min-h-screen">
-    <header class="bg-gradient-to-r from-blue-800 to-indigo-600 text-white/80">
-      <nav class="px-8 py-6 flex items-baseline">
-        <div class="text-4xl pr-8 font-serif tracking-tighter">
-          Photog Burst
-        </div>
-        <div>
-          <a class="text-lg font-semibold hover:text-black/50 pr-8" href="/"
-            >Home</a
-          >
-          <a
-            class="text-lg font-semibold hover:text-black/50 pr-8"
-            href="/contact"
-            >Contact</a
-          >
-        </div>
-        <div class="flex-grow">
-          {{if currentUser}}
-            <div class="flex flex-row-reverse">
-              <a class="text-lg font-semibold 
-              hover:text-black pr-8
-              " href="/galleries">
-                My Galleries
-              </a>
-            </div>
-          {{else}}
-            <div class="flex-grow"></div>
-          {{end}}
-        </div>
-        <div>
-          {{if currentUser}}
-            <form action="/signout" method="post" class="inline pr-6">
-              <div class="hidden">
-                {{csrfField}}
-              </div>
-              <button type="submit">Sign Out</button>
-            </form>
-          {{else}}
-            <a class="pr-4" href="/signin">Sign in</a>
-            <a
-              class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded"
-              href="/signup"
-              >Sign up</a
-            >
-          {{end}}
-        </div>
-      </nav>
-    </header>
+  <body class="bg-gray-100">
+    <header class="bg-gradient-to-r from-green-400 to-teal-500 text-white fixed w-full z-50">
+  <nav class="container mx-auto flex items-center justify-between px-4 py-4">
+    <div class="text-4xl tracking-tighter transform transition duration-200 hover:scale-105">
+      <a href="/" class="pr-4 font-logo bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-800 animate-gradient">
+        Photog Burst
+      </a>
+    </div>
+    <div class="flex space-x-8 mr-8">
+      <a class="text-lg font-semibold transform transition duration-100 hover:scale-105 hover:text-teal-700" href="/">Home</a>
+      <a class="text-lg font-semibold transform transition duration-100 hover:scale-105 hover:text-teal-700" href="/about">About</a>
+      {{if currentUser}}
+        <a class="text-lg font-semibold transform transition duration-100 hover:scale-105 hover:text-teal-700" href="/galleries">My Galleries</a>
+      {{end}}
+    </div>
+    <div class="flex items-center space-x-4">
+      {{if currentUser}}
+        <form action="/signout" method="post" class="inline">
+          <div class="hidden">
+            {{csrfField}}
+          </div>
+          <button class="px-4 py-2 bg-teal-600 hover:bg-teal-700 rounded transform transition duration-200 hover:scale-110" type="submit">Sign Out</button>
+        </form>
+      {{else}}
+        <a class="text-lg font-semibold transform transition duration-100 hover:scale-105 hover:text-teal-700" href="/signin">Sign in</a>
+        <a class="px-4 py-2 bg-teal-600 hover:bg-teal-700 rounded transform transition duration-200 hover:scale-105" href="/signup">Sign up</a>
+      {{end}}
+    </div>
+  </nav>
+</header>
+
+<style>
+  .font-logo {
+    font-family: 'Pacifico', cursive;
+  }
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 2s ease infinite;
+  }
+</style>
 
     {{/* Alerts */}}
       {{if errors}}

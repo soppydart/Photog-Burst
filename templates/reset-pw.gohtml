@@ -1,59 +1,56 @@
 {{template "header" .}}
-<div class="py-12 flex items-center flex-col">
-  <h1 class="pt-4 pb-8 text-center text-3xl font-bold text-gra-900">
+<div class="pt-28 flex items-center flex-col min-h-screen bg-gradient-to-r from-green-400 to-teal-500 text-white">
+  <h1 class="pt-4 pb-8 text-center text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
     Reset Your Password
   </h1>
-  <form action="/reset-pw" method="post" class="px-8 py-8 bg-white rounded shadow">
+  <form action="/reset-pw" method="post" class="w-full max-w-md px-8 py-8 bg-gradient-to-r from-gray-100 to-gray-300 rounded-lg shadow-lg">
     <div class="hidden">
       {{csrfField}}
     </div>
     <div class="py-2">
-    </div>
-    <div class="py-2">
-      <label for="password" class="text-sm font-semibold">New Password</label>
+      <label for="password" class="text-sm font-semibold text-gray-700">New Password</label>
       <input
         name="password"
         id="password"
         type="password"
-        placeholder="Password"
+        placeholder="New Password"
         required
         autofocus
-        class="w-full px-3 py-2 border border-gray-400 plcaeholder-gray-600 text-gray-800 rounded"
+        class="w-full px-3 py-2 border border-gray-400 placeholder-gray-600 text-gray-800 rounded"
       />
     </div>
     {{if .Token}}
-        <div class="hidden">
-        <input type="hidden" id="token" name="token" value="{{.Token}}" />
-        </div>
+    <div class="hidden">
+      <input type="hidden" id="token" name="token" value="{{.Token}}" />
+    </div>
     {{else}}
-        <label for="password" class="text-sm font-semibold">Password Reset Token</label>
-        <input
-            name="token"
-            id="token"
-            type="text"
-            placeholder="Check your email"
-            required
-            class="w-full px-3 py-2 border border-gray-400 plcaeholder-gray-600 text-gray-800 rounded"
-        />
+    <div class="py-2">
+      <label for="token" class="text-sm font-semibold text-gray-700">Password Reset Token</label>
+      <input
+        name="token"
+        id="token"
+        type="text"
+        placeholder="Check your email"
+        required
+        class="w-full px-3 py-2 border border-gray-400 placeholder-gray-600 text-gray-800 rounded"
+      />
+    </div>
     {{end}}
     <button
       type="submit"
-      class="my-4 w-full py-4 px-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-lg flex justify-center"
+      class="my-4 w-full py-3 bg-gradient-to-r from-green-400 to-teal-500 hover:from-green-500 hover:to-teal-600 rounded-md text-white font-bold text-lg transition duration-300"
     >
       Update Password
     </button>
-    <div class="py-2 w-full flex justify-between text-xs">
+    <div class="py-2 w-full flex justify-between text-xs text-gray-800">
       <p>
         Need an account?
-        <a href="/signup" class="text-blue-800 font-bold underline">Sign Up</a>
+        <a href="/signup" class="text-teal-500 font-bold hover:text-teal-600 transition">Sign Up</a>
       </p>
       <p>
-        <a href="/signin" class="text-blue-800 font-bold underline"
-          >Sign In</a
-        >
+        <a href="/signin" class="text-teal-500 font-bold hover:text-teal-600 transition">Sign In</a>
       </p>
     </div>
   </form>
 </div>
-
 {{template "footer" .}}

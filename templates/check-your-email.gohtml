@@ -1,11 +1,10 @@
 {{template "header" .}}
-<div class="py-12 flex items-center flex-col">
-  <h1 class="pt-4 pb-8 text-center text-3xl font-bold text-gra-900">
+<div class="pt-28 flex items-center flex-col min-h-screen bg-gradient-to-r from-green-400 to-teal-500 text-white">
+  <h1 class="pt-4 pb-8 text-center text-5xl font-bold text-teal-700">
     Go check your email!
   </h1>
-    <p class="text-sm text-gray-600 pb-4">
-      An email has been sent to {{.Email}} with further instructions.
-    </p>
+  <p class="text-sm text-gray-100 pb-4">
+    An email has been sent to {{.Email}} with further instructions.
+  </p>
 </div>
-
 {{template "footer" .}}

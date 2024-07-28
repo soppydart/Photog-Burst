@@ -1,73 +1,76 @@
 {{template "header" .}}
 
-<div class="p-8 w-full">
-  <h1 class="pt-4 pb-8 text-3xl font-bold text-gray-800">Edit your Gallery!</h1>
-  <form action="/galleries/{{.ID}}" method="post" class="px-8 py-8">
-    <div class="hidden">
-      {{ csrfField }}
-    </div>
-    <div class="py-2">
-      <label for="title" class="text-md font-semibold">Title</label>
-      <input
-        name="title"
-        id="title"
-        type="text"
-        placeholder="Gallery Title"
-        required
-        value="{{.Title}}"
-        autofocus
-        class="w-full px-3 py-2 border border-gray-400 plcaeholder-gray-600 text-gray-800 rounded"
-      />
-    </div>
-    <button
-      type="submit"
-      class="my-4 mx-auto py-2 px-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-lg flex justify-center"
-    >
-      Update
-    </button>
-  </form>
-
-  <div class="py-4">
-    {{template "upload_image_form" .}}
-  </div>
-  <div class="py-4">
-    {{template "images_via_dropbox_form" .}}
-  </div>
-
-  <div class="py-4">
-    <h2 class="pb-4 text-sm font-semibold text-gray-800">Current Images</h2>
-    <div class="py-2 grid grid-cols-8 gap-2">
-      {{ range.Images }}
-      <div class="h-min w-full relative">
-        <div class="absolute top-2 right-2">
-          {{template "delete_image_form" .}}
-        </div>
-        <img
-          class="w-full"
-          src="/galleries/{{.GalleryID}}/images/{{.FilenameEscaped}}"
+<div class="pt-28 px-8 min-h-screen bg-gradient-to-r from-green-400 to-teal-500 text-white">
+  <h1 class="pt-4 pb-8 text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-800 to-purple-600 text-center">
+    Edit Your Gallery!
+  </h1>
+  <div class="bg-green-200 rounded-lg shadow-lg p-8 text-gray-800">
+    <form action="/galleries/{{.ID}}" method="post" class="space-y-6">
+      <div class="hidden">
+        {{ csrfField }}
+      </div>
+      <div class="py-2">
+        <label for="title" class="block text-md font-semibold">Title</label>
+        <input
+          name="title"
+          id="title"
+          type="text"
+          placeholder="Gallery Title"
+          required
+          value="{{.Title}}"
+          autofocus
+          class="w-full px-3 py-2 border border-gray-400 placeholder-gray-600 text-gray-800 rounded"
         />
       </div>
-      {{ end }}
-    </div>
-  </div>
-
-  {{/* Dangerous Actions */}}
-  <div class="py-4">
-    <h2>Dangerous Actions</h2>
-    <form
-      action="/galleries/{{.ID}}/delete"
-      method="post"
-      onsubmit="return confirm(
-                    'Do you really want to delete this gallery?');"
-    >
-      {{ csrfField }}
-      <button
-        type="submit"
-        class="my-4 mx-auto py-2 px-8 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-lg flex justify-center"
-      >
-        Delete
-      </button>
+      <div class="flex justify-center space-x-4">
+        <button
+          type="submit"
+          class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-md"
+        >
+          Update
+        </button>
+        <form
+          action="/galleries/{{.ID}}/delete"
+          method="post"
+          onsubmit="return confirm('Do you really want to delete this gallery?');"
+          class="inline"
+        >
+          {{ csrfField }}
+          <button
+            type="submit"
+            class="py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-md"
+          >
+            Delete
+          </button>
+        </form>
+      </div>
     </form>
+
+    <div class="py-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="bg-green-100 rounded p-4 flex flex-col items-center">
+        {{template "upload_image_form" .}}
+      </div>
+      <div class="bg-green-100 rounded p-4 flex flex-col items-center">
+        {{template "images_via_dropbox_form" .}}
+      </div>
+    </div>
+
+    <div class="py-4">
+      <h2 class="pb-4 text-lg font-semibold text-gray-800">Current Images</h2>
+      <div class="py-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        {{ range .Images }}
+        <div class="relative">
+          <div class="absolute top-2 right-2">
+            {{template "delete_image_form" .}}
+          </div>
+          <img
+            class="w-full h-auto rounded border border-gray-300"
+            src="/galleries/{{.GalleryID}}/images/{{.FilenameEscaped}}"
+          />
+        </div>
+        {{ end }}
+      </div>
+    </div>
   </div>
 </div>
 
@@ -94,22 +97,28 @@
   action="/galleries/{{.ID}}/images"
   method="post"
   enctype="multipart/form-data"
+  class="flex flex-col items-center bg-green-100 p-4 rounded w-full"
 >
   {{ csrfField }}
-  <div class="py-2">
-    <label for="images" class="block mb-2 text-sm font-semibold text-gray-800">
+  <div class="pb-2 w-full">
+    <label for="images" class="block mb-2 text-sm font-semibold text-gray-800 text-center">
       Add Images
-      <p class="py-2 text-xs text-gray-600 font-normal">
-        Please only upload png, jpeg and gif files.
-      </p>
     </label>
+    <p class="py-2 text-sm text-gray-600 font-normal text-center">
+      Please only upload png, jpeg, and gif files.
+    </p>
     <input
       type="file"
       multiple
       name="images"
       accept="image/png, image/jpeg, image/gif"
-      name="images"
       id="images"
+      class="block w-full text-sm text-gray-500
+             file:mr-4 file:py-2 file:px-4
+             file:rounded-full file:border-0
+             file:text-sm file:font-semibold hover:pointer
+             file:bg-indigo-600 file:text-white
+             hover:file:bg-indigo-700 mx-auto"
     />
   </div>
   <button
@@ -121,16 +130,18 @@
 </form>
 {{ end }}
 
+
 {{define "images_via_dropbox_form"}}
 <form
   action="/galleries/{{.ID}}/images/url"
   method="post"
   enctype="multipart/form-data"
   id="dropbox-chooser-form"
+  class="space-y-4 flex flex-col items-center justify-center"
 >
   {{ csrfField }}
-  <div class="py-2">
-    <p class="block mb-2 text-sm font-semibold text-gray-800">
+  <div class="py-4 w-full">
+    <p class="block mb-2 text-sm font-semibold text-gray-800 text-center">
       Add Images via Dropbox
     </p>
   </div>
