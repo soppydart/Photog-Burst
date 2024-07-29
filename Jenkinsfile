@@ -17,6 +17,7 @@ pipeline {
                     echo 'Successfully logged into Docker Hub'
 
                     withCredentials([file(credentialsId: 'photog-burst-env', variable: 'ENV_FILE')]) {
+                        sh 'rm -f .env'
                         sh 'cp $ENV_FILE .env'
                     }
 
